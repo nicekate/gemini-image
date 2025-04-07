@@ -14,8 +14,8 @@
 
 1. 克隆仓库
 ```
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/nicekate/gemini-image.git
+cd gemini-image
 ```
 
 2. 创建虚拟环境并激活
@@ -72,3 +72,7 @@ python app.py
 ## 许可证
 
 MIT
+
+## 项目仓库
+
+[GitHub: https://github.com/nicekate/gemini-image](https://github.com/nicekate/gemini-image)
