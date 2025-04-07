@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图像问答 - Gemini 图像应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+</head>
+<body>
+    <div class="container container-wide">
+        <header class="text-center page-header">
+            <h1>图像问答</h1>
+            <p class="lead">上传图片并提问关于图片内容的问题，获取AI的智能解答</p>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-spacious">
+                <i class="bi bi-arrow-left me-2"></i>返回首页
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="row row-spacious single-column-layout">
+            <div class="col-lg-7">
+                <div class="card card-spacious">
+                    <div class="card-header">
+                        <h5 class="card-title">上传图片并提问</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('image_qa') }}" method="post" enctype="multipart/form-data" class="form-spacious">
+                            <div class="mb-4">
+                                <label for="image" class="form-label">选择图片</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                <div class="form-text">支持的格式: PNG, JPEG, WEBP, HEIC, HEIF</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="question" class="form-label">你的问题</label>
+                                <input type="text" class="form-control" id="question" name="question" placeholder="这张图片里有什么?" required>
+                                <div class="form-text">输入你想要问关于图片的问题，例如“这张图片里有什么动物？”</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-spacious">
+                                <i class="bi bi-send-fill me-2"></i>提交问题
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                {% if image_path %}
+                <div class="card card-spacious">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">结果</h5>
+                        <button class="btn btn-outline-info copy-btn" data-clipboard-text="问题: {{ question }}&#10;&#10;回答: {{ answer|striptags }}">
+                            <i class="bi bi-clipboard-check"></i> 复制全部
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4 result-section">
+                            <img src="{{ url_for('static', filename=image_path) }}" class="img-fluid rounded shadow" alt="上传的图片">
+                        </div>
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="fw-bold fs-5 mb-0">问题:</h6>
+                                <button class="btn btn-outline-secondary copy-btn" data-clipboard-target="#question-content">
+                                    <i class="bi bi-clipboard"></i> 复制问题
+                                </button>
+                            </div>
+                            <p id="question-content" class="p-3 bg-light rounded">{{ question }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="fw-bold fs-5 mb-0">回答:</h6>
+                                <button class="btn btn-outline-primary copy-btn" data-clipboard-target="#answer-content">
+                                    <i class="bi bi-clipboard"></i> 复制回答
+                                </button>
+                            </div>
+                            <div class="answer-box p-4" id="answer-content">
+                                {{ answer|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化clipboard.js
+            var clipboard = new ClipboardJS('.copy-btn');
+
+            clipboard.on('success', function(e) {
+                // 复制成功后更改按钮文本
+                const btn = e.trigger;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check-lg"></i> 复制成功';
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-success');
+
+                // 2秒后恢复按钮文本
+                setTimeout(function() {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-primary');
+                }, 2000);
+
+                e.clearSelection();
+            });
+
+            clipboard.on('error', function(e) {
+                // 复制失败后显示错误信息
+                const btn = e.trigger;
+                btn.innerHTML = '<i class="bi bi-exclamation-triangle"></i> 复制失败';
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-danger');
+
+                // 2秒后恢复按钮文本
+                setTimeout(function() {
+                    btn.innerHTML = '<i class="bi bi-clipboard"></i> 复制回答';
+                    btn.classList.remove('btn-danger');
+                    btn.classList.add('btn-outline-primary');
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

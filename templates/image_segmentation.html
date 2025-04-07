@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图像分割 - Gemini 图像应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+</head>
+<body>
+    <div class="container container-wide">
+        <header class="text-center page-header">
+            <h1>图像分割</h1>
+            <p class="lead">对图像进行精准分割并显示分割结果，分离图像元素</p>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-spacious">
+                <i class="bi bi-arrow-left me-2"></i>返回首页
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="row row-spacious single-column-layout">
+            <div class="col-lg-7">
+                <div class="card card-spacious">
+                    <div class="card-header">
+                        <h5 class="card-title">上传图片并分割</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('image_segmentation') }}" method="post" enctype="multipart/form-data" class="form-spacious">
+                            <div class="mb-4">
+                                <label for="image" class="form-label">选择图片</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                <div class="form-text">支持的格式: PNG, JPEG, WEBP, HEIC, HEIF</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="segment_object" class="form-label">分割对象</label>
+                                <input type="text" class="form-control" id="segment_object" name="segment_object" placeholder="分割图片中的所有对象" value="{{ segment_object }}">
+                                <div class="form-text">例如: "人"、"猫"、"汽车"、"植物"等，留空则分割所有对象。也可以指定多个对象，如"人 猫 汽车"</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-spacious">
+                                <i class="bi bi-layers me-2"></i>开始分割
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                {% if image_path and segmented_image %}
+                <div class="card card-spacious">
+                    <div class="card-header">
+                        <h5 class="card-title">分割结果</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">原始图片:</h6>
+                            <div class="position-relative mb-4">
+                                <img src="{{ url_for('static', filename=image_path) }}" class="img-fluid rounded shadow" alt="原始图片">
+                                <a href="{{ url_for('static', filename=image_path) }}" download class="btn btn-success position-absolute bottom-0 end-0 m-3">
+                                    <i class="bi bi-download"></i> 下载
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">分割结果:</h6>
+                            <div class="position-relative mb-4">
+                                <img src="{{ url_for('static', filename=segmented_image) }}" class="img-fluid rounded shadow" alt="分割结果">
+                                <a href="{{ url_for('static', filename=segmented_image) }}" download class="btn btn-success position-absolute bottom-0 end-0 m-3">
+                                    <i class="bi bi-download"></i> 下载
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">掩码图像:</h6>
+                            <div class="position-relative mb-4">
+                                <img src="{{ url_for('static', filename=mask_image) }}" class="img-fluid rounded shadow" alt="掩码图像">
+                                <a href="{{ url_for('static', filename=mask_image) }}" download class="btn btn-success position-absolute bottom-0 end-0 m-3">
+                                    <i class="bi bi-download"></i> 下载
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">分割对象:</h6>
+                            <p class="p-3 bg-light rounded">{{ segment_object if segment_object else '所有对象' }}</p>
+                        </div>
+                        <div class="mb-4">
+                            <button class="btn btn-outline-secondary btn-spacious" type="button" data-bs-toggle="collapse" data-bs-target="#rawResponse" aria-expanded="false" aria-controls="rawResponse">
+                                <i class="bi bi-code-slash me-2"></i>查看原始响应
+                            </button>
+                            <div class="collapse mt-3" id="rawResponse">
+                                <pre class="raw-response p-3">{{ raw_response }}</pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <a href="{{ url_for('image_segmentation') }}" class="btn btn-outline-primary btn-spacious">
+                                <i class="bi bi-arrow-repeat me-2"></i>分割新图片
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

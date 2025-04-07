@@ -1,0 +1,204 @@
+/* 宽松布局样式 */
+:root {
+    --spacer-sm: 1rem;
+    --spacer-md: 2rem;
+    --spacer-lg: 3rem;
+    --spacer-xl: 5rem;
+    --primary-color: #4285f4;
+    --secondary-color: #34a853;
+    --accent-color: #ea4335;
+    --neutral-color: #fbbc05;
+}
+
+/* 增加容器宽度 */
+.container-wide {
+    max-width: 1400px !important;
+    padding: 0 var(--spacer-md);
+}
+
+/* 页面标题区域 */
+.page-header {
+    margin: 0 0 var(--spacer-xl) 0;
+    padding: var(--spacer-lg) 0;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 3px;
+}
+
+.page-header h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: var(--spacer-sm);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-header .lead {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto var(--spacer-md) auto;
+    opacity: 0.9;
+}
+
+.page-header .btn-outline-secondary {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.page-header .btn-outline-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    color: white;
+}
+
+/* 卡片样式 */
+.card-spacious {
+    border-radius: 16px;
+    margin-bottom: var(--spacer-lg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: none;
+    background-color: white;
+    overflow: hidden;
+}
+
+/* 表单卡片 */
+.col-lg-7 .card-spacious .card-header {
+    padding: var(--spacer-md);
+    background-color: var(--secondary-color);
+    color: white;
+    border-bottom: none;
+    position: relative;
+    font-weight: 600;
+}
+
+.col-lg-7 .card-spacious .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    opacity: 0.7;
+}
+
+/* 结果卡片 */
+.col-lg-5 .card-spacious .card-header {
+    padding: var(--spacer-md);
+    background-color: var(--primary-color);
+    color: white;
+    border-bottom: none;
+    position: relative;
+    font-weight: 600;
+}
+
+.col-lg-5 .card-spacious .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    opacity: 0.7;
+}
+
+.card-spacious .card-header .card-title {
+    margin-bottom: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.card-spacious .card-body {
+    padding: var(--spacer-lg);
+    background-color: white;
+}
+
+.card-spacious .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+/* 表单元素 */
+.form-spacious .form-label {
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.form-spacious .form-control {
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    margin-bottom: var(--spacer-md);
+}
+
+.form-spacious textarea.form-control {
+    min-height: 150px;
+}
+
+.form-spacious .form-text {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-spacious .form-check {
+    margin-bottom: 1rem;
+}
+
+/* 按钮样式 */
+.btn-spacious {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* 结果区域 */
+.result-section {
+    margin-top: var(--spacer-md);
+}
+
+.result-section img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: var(--spacer-md);
+}
+
+/* 响应式调整 */
+@media (min-width: 992px) {
+    .row-spacious {
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+    }
+
+    .row-spacious > [class*="col-"] {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+/* 两列布局变为单列 */
+@media (max-width: 991.98px) {
+    .single-column-layout .row > [class*="col-"] {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+}

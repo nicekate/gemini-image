@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图像生成 - Gemini 图像应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+</head>
+<body>
+    <div class="container container-wide">
+        <header class="text-center page-header">
+            <h1>图像生成</h1>
+            <p class="lead">使用Gemini或Imagen生成高质量图像，只需输入文字描述</p>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-spacious">
+                <i class="bi bi-arrow-left me-2"></i>返回首页
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="row row-spacious single-column-layout">
+            <div class="col-lg-7">
+                <div class="card card-spacious">
+                    <div class="card-header">
+                        <h5 class="card-title">生成图像</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('image_generation') }}" method="post" class="form-spacious">
+                            <div class="mb-4">
+                                <label for="prompt" class="form-label">提示词</label>
+                                <textarea class="form-control" id="prompt" name="prompt" rows="5" placeholder="描述你想要生成的图像...例如：一只在深蓝色海洋中游泳的蓝鲸，阳光穿透水面形成光束" required>{{ prompt }}</textarea>
+                                <div class="form-text">输入详细的描述来获得更好的生成效果，可以包含场景、颜色、风格等信息</div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">选择模型</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="model_type" id="gemini" value="gemini" {% if not model_type or model_type == 'gemini' %}checked{% endif %}>
+                                    <label class="form-check-label" for="gemini">
+                                        <span class="fw-bold">Gemini</span> - 文本+图像生成，适合大多数场景
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="model_type" id="imagen" value="imagen" {% if model_type == 'imagen' %}checked{% endif %}>
+                                    <label class="form-check-label" for="imagen">
+                                        <span class="fw-bold">Imagen</span> - 高质量图像生成，更适合复杂场景和细节要求
+                                    </label>
+                                </div>
+                                <div class="form-text mt-2">注意: Imagen仅在付费层级可用，并且始终包含SynthID水印</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-spacious">
+                                <i class="bi bi-magic me-2"></i>生成图像
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                {% if image_path %}
+                <div class="card card-spacious">
+                    <div class="card-header">
+                        <h5 class="card-title">生成结果</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4 result-section">
+                            <div class="position-relative">
+                                <img src="{{ url_for('static', filename=image_path) }}" class="img-fluid rounded shadow" alt="生成的图像">
+                                <a href="{{ url_for('static', filename=image_path) }}" download class="btn btn-success position-absolute bottom-0 end-0 m-3">
+                                    <i class="bi bi-download"></i> 下载图片
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">提示词:</h6>
+                            <p class="p-3 bg-light rounded">{{ prompt }}</p>
+                        </div>
+                        {% if description %}
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">描述:</h6>
+                            <div class="description-box p-4">
+                                {{ description|safe }}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">使用模型:</h6>
+                            <p class="p-3 bg-light rounded">{{ "Gemini" if model_type == "gemini" else "Imagen" }}</p>
+                        </div>
+                        <div class="mt-4">
+                            <a href="{{ url_for('image_generation') }}" class="btn btn-outline-primary btn-spacious">
+                                <i class="bi bi-arrow-repeat me-2"></i>重新生成
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

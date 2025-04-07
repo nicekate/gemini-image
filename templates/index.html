@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini 图像应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="hero-section">
+        <div class="container position-relative">
+            <div class="position-absolute top-0 end-0 mt-4 me-4">
+                <a href="{{ url_for('settings') }}" class="btn btn-primary settings-btn">
+                    <i class="bi bi-gear-fill"></i> 设置
+                </a>
+            </div>
+            <header class="text-center py-5">
+                <h1 class="display-3 fw-bold animate__animated animate__fadeInDown">
+                    <span class="text-gradient">Gemini</span> 图像应用
+                </h1>
+                <p class="lead fs-4 mt-3 animate__animated animate__fadeInUp animate__delay-1s">基于Google Gemini API的图像处理应用</p>
+                <div id="apiTestResult" class="alert d-none mt-4 animate__animated animate__fadeIn"></div>
+            </header>
+        </div>
+    </div>
+
+    <div class="container main-content">
+
+        <h2 class="text-center mb-5 section-title">AI 图像处理功能</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card animate__animated animate__fadeInUp">
+                    <div class="icon-wrapper bg-gradient-1">
+                        <i class="bi bi-chat-square-text-fill"></i>
+                    </div>
+                    <h3 class="feature-title">图像问答</h3>
+                    <p class="feature-text">上传图片并提问关于图片内容的问题，获取AI的智能解答</p>
+                    <a href="{{ url_for('image_qa') }}" class="btn btn-outline-gradient">
+                        <span>开始使用</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                    <div class="icon-wrapper bg-gradient-2">
+                        <i class="bi bi-image-fill"></i>
+                    </div>
+                    <h3 class="feature-title">图像生成</h3>
+                    <p class="feature-text">使用Gemini或Imagen生成高质量图像，只需输入文字描述</p>
+                    <a href="{{ url_for('image_generation') }}" class="btn btn-outline-gradient">
+                        <span>开始使用</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                    <div class="icon-wrapper bg-gradient-3">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <h3 class="feature-title">图像编辑</h3>
+                    <p class="feature-text">上传图片并进行智能编辑，只需描述您想要的效果</p>
+                    <a href="{{ url_for('image_editing') }}" class="btn btn-outline-gradient">
+                        <span>开始使用</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.6s">
+                    <div class="icon-wrapper bg-gradient-4">
+                        <i class="bi bi-bounding-box-circles"></i>
+                    </div>
+                    <h3 class="feature-title">边界框检测</h3>
+                    <p class="feature-text">检测图像中的对象并智能标记边界框，快速识别物体</p>
+                    <a href="{{ url_for('bounding_box') }}" class="btn btn-outline-gradient">
+                        <span>开始使用</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.8s">
+                    <div class="icon-wrapper bg-gradient-5">
+                        <i class="bi bi-layers-fill"></i>
+                    </div>
+                    <h3 class="feature-title">图像分割</h3>
+                    <p class="feature-text">对图像进行精准分割并显示分割结果，分离图像元素</p>
+                    <a href="{{ url_for('image_segmentation') }}" class="btn btn-outline-gradient">
+                        <span>开始使用</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="feature-card coming-soon animate__animated animate__fadeInUp" style="animation-delay: 1s">
+                    <div class="icon-wrapper bg-gradient-6">
+                        <i class="bi bi-stars"></i>
+                    </div>
+                    <h3 class="feature-title">更多功能</h3>
+                    <p class="feature-text">更多强大的AI图像处理功能正在开发中，敬请期待</p>
+                    <span class="badge bg-gradient-6 coming-soon-badge">即将推出</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer-section py-4 mt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; 2025 Gemini 图像应用 | 基于 <a href="https://ai.google.dev/gemini-api/docs/vision" target="_blank" class="footer-link">Google Gemini API</a> 构建</p>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

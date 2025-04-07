@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>边界框检测 - Gemini 图像应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+</head>
+<body>
+    <div class="container container-wide">
+        <header class="text-center page-header">
+            <h1>边界框检测</h1>
+            <p class="lead">检测图像中的对象并智能标记边界框，快速识别物体</p>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-spacious">
+                <i class="bi bi-arrow-left me-2"></i>返回首页
+            </a>
+        </header>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="row row-spacious single-column-layout">
+            <div class="col-lg-7">
+                <div class="card card-spacious">
+                    <div class="card-header">
+                        <h5 class="card-title">上传图片并检测对象</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('bounding_box') }}" method="post" enctype="multipart/form-data" class="form-spacious">
+                            <div class="mb-4">
+                                <label for="image" class="form-label">选择图片</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                <div class="form-text">支持的格式: PNG, JPEG, WEBP, HEIC, HEIF</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="detect_object" class="form-label">检测对象</label>
+                                <input type="text" class="form-control" id="detect_object" name="detect_object" placeholder="检测图片中的所有对象" value="{{ detect_object }}">
+                                <div class="form-text">例如: "人"、"猫"、"汽车"、"水果"等，留空则检测所有对象。也可以指定多个对象，如"人 猫 汽车"</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-spacious">
+                                <i class="bi bi-search me-2"></i>开始检测
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                {% if image_path and bbox_image %}
+                <div class="card card-spacious">
+                    <div class="card-header">
+                        <h5 class="card-title">检测结果</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">原始图片:</h6>
+                            <div class="position-relative mb-4">
+                                <img src="{{ url_for('static', filename=image_path) }}" class="img-fluid rounded shadow" alt="原始图片">
+                                <a href="{{ url_for('static', filename=image_path) }}" download class="btn btn-success position-absolute bottom-0 end-0 m-3">
+                                    <i class="bi bi-download"></i> 下载
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">检测结果:</h6>
+                            <div class="position-relative mb-4">
+                                <img src="{{ url_for('static', filename=bbox_image) }}" class="img-fluid rounded shadow" alt="检测结果">
+                                <a href="{{ url_for('static', filename=bbox_image) }}" download class="btn btn-success position-absolute bottom-0 end-0 m-3">
+                                    <i class="bi bi-download"></i> 下载
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">检测对象:</h6>
+                            <p class="p-3 bg-light rounded">{{ detect_object if detect_object else '所有对象' }}</p>
+                        </div>
+                        {% if bboxes %}
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">边界框坐标:</h6>
+                            <div class="bbox-coordinates p-3">
+                                {% for bbox in bboxes %}
+                                <p>边界框 {{ loop.index }}: [{{ bbox.coordinates|join(', ') }}]</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-5 mb-2">原始响应:</h6>
+                            <pre class="raw-response p-3">{{ raw_response }}</pre>
+                        </div>
+                        <div class="mt-4">
+                            <a href="{{ url_for('bounding_box') }}" class="btn btn-outline-primary btn-spacious">
+                                <i class="bi bi-arrow-repeat me-2"></i>检测新图片
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
